@@ -1,7 +1,7 @@
 // ===== 图像识别模块 =====
 
 // 本地代理服务器配置
-const LOCAL_API_URL = 'http://localhost:3005/api';
+const LOCAL_API_URL = 'http://localhost:3006/api';
 
 // 将 base64 转换为 blob
 function dataURLtoBlob(dataURL) {
@@ -91,10 +91,18 @@ async function recognizeQuestions(imageData) {
 // 完整的识别流程
 async function recognizeHomework(imageData) {
     try {
-        // 识别学生姓名
+        // 步骤1: 识别学生姓名
+        updateProgressStep(0);
+        updateProgressBar(30);
+        updateProcessingTitle('识别学生姓名', '正在从作业中提取学生姓名信息');
+        updateCurrentTask('提取姓名', '使用13种智能模式识别学生姓名');
         const studentName = await recognizeStudentName(imageData);
 
-        // 识别题目和答案
+        // 步骤2: 识别题目和答案
+        updateProgressStep(1);
+        updateProgressBar(70);
+        updateProcessingTitle('识别题目内容', '正在分析数学题目和答案');
+        updateCurrentTask('提取题目', '正在识别题目内容和学生答案');
         const questions = await recognizeQuestions(imageData);
 
         // 保存识别结果
@@ -102,6 +110,16 @@ async function recognizeHomework(imageData) {
             studentName,
             questions
         };
+
+        // 更新进度到完成
+        updateProgressStep(2);
+        updateProgressBar(90);
+        updateProcessingTitle('批改评分', '正在计算分数并生成批改报告');
+        updateCurrentTask('计算分数', '正在对比答案并计算得分');
+
+        // 短暂延迟显示完成
+        await new Promise(resolve => setTimeout(resolve, 500));
+        updateProgressBar(100);
 
         // 显示姓名确认页面
         showNameConfirmPage(studentName);
@@ -111,6 +129,9 @@ async function recognizeHomework(imageData) {
 
     } catch (error) {
         console.error('识别流程失败:', error);
+        updateProgressBar(0);
+        updateProcessingTitle('识别失败', error.message);
+        updateCurrentTask('错误', '识别过程中发生错误');
         throw new Error('识别失败: ' + error.message);
     }
 }
@@ -154,11 +175,20 @@ async function startGradingProcess() {
             throw new Error('没有选择图片');
         }
 
+        // 更新进度到准备阶段
+        updateProgressBar(5);
+        updateProcessingTitle('正在连接服务...', '正在检查代理服务状态');
+        updateCurrentTask('连接服务', '正在验证服务器连接');
+
         // 尝试连接代理服务器
         let recognitionResult;
         try {
             const response = await fetch(`${LOCAL_API_URL}/health`);
             if (response.ok) {
+                updateProgressBar(10);
+                updateProcessingTitle('开始识别...', '已连接服务器，开始图像识别');
+                updateCurrentTask('图像识别', '正在上传图片到AI识别服务');
+
                 // 代理服务在线，使用真实识别
                 recognitionResult = await recognizeHomework(window.selectedImageData);
             } else {
@@ -166,6 +196,10 @@ async function startGradingProcess() {
             }
         } catch (proxyError) {
             console.warn('代理服务不可用，使用模拟数据:', proxyError.message);
+
+            updateProgressBar(10);
+            updateProcessingTitle('服务不可用', '代理服务未启动，使用模拟数据');
+            updateCurrentTask('模拟演示', '正在加载模拟数据进行演示');
 
             // 代理服务不可用，使用模拟数据演示
             recognitionResult = await recognizeImageLocal(window.selectedImageData);
@@ -183,6 +217,11 @@ async function startGradingProcess() {
             // 保存识别结果
             window.recognitionResult = recognitionResult;
 
+            // 更新进度到完成
+            updateProgressBar(100);
+            updateProcessingTitle('识别完成', '图像识别成功，请确认学生姓名');
+            updateCurrentTask('等待确认', '请确认或修改识别到的学生姓名');
+
             // 显示姓名确认页面
             showNameConfirmPage(recognitionResult.studentName);
         }
@@ -190,6 +229,9 @@ async function startGradingProcess() {
 
     } catch (error) {
         console.error('批改流程失败:', error);
+        updateProgressBar(0);
+        updateProcessingTitle('批改失败', error.message);
+        updateCurrentTask('错误', '处理过程中发生错误');
         showError('批改失败: ' + error.message + '\n\n请检查代理服务是否启动（npm start）');
 
         // 返回首页

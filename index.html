@@ -111,19 +111,39 @@
         <div class="container">
             <div class="processing-container">
                 <div class="spinner"></div>
-                <h2>正在批改作业...</h2>
+                <h2 id="processingTitle">正在准备批改...</h2>
+                <p id="processingDetail" class="processing-detail">请稍候，系统正在处理您的作业</p>
+
+                <!-- 进度条 -->
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">0%</div>
+                </div>
+
+                <!-- 详细步骤 -->
                 <div class="progress-steps">
-                    <div class="step active">
+                    <div class="step active" id="step1">
                         <span class="step-icon">1</span>
                         <span>识别学生姓名</span>
                     </div>
-                    <div class="step">
+                    <div class="step" id="step2">
                         <span class="step-icon">2</span>
                         <span>提取题目内容</span>
                     </div>
-                    <div class="step">
+                    <div class="step" id="step3">
                         <span class="step-icon">3</span>
                         <span>批改评分</span>
+                    </div>
+                </div>
+
+                <!-- 当前执行任务 -->
+                <div class="current-task" id="currentTask">
+                    <div class="task-icon">⏳</div>
+                    <div class="task-content">
+                        <div class="task-title">等待开始</div>
+                        <div class="task-description">即将开始处理您的作业</div>
                     </div>
                 </div>
             </div>

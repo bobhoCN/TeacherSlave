@@ -6,7 +6,7 @@ const multer = require('multer');
 const path = require('path');
 
 const app = express();
-const PORT = 3005;
+const PORT = 3006;
 
 // 中间件
 app.use(cors());

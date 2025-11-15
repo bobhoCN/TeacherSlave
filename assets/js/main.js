@@ -184,6 +184,9 @@ function processSelectedImage() {
 function showProcessingPage() {
     showSection('processingSection');
     updateProgressStep(0);
+    updateProcessingTitle('正在准备批改...', '请稍候，系统正在初始化');
+    updateProgressBar(0);
+    updateCurrentTask('等待开始', '即将开始处理您的作业');
 }
 
 // 显示姓名确认页面
@@ -268,6 +271,45 @@ function updateProgressStep(stepIndex) {
             step.classList.remove('active');
         }
     });
+}
+
+// 更新处理标题和详情
+function updateProcessingTitle(title, detail) {
+    const titleElement = document.getElementById('processingTitle');
+    const detailElement = document.getElementById('processingDetail');
+    if (titleElement) titleElement.textContent = title;
+    if (detailElement) detailElement.textContent = detail;
+}
+
+// 更新进度条
+function updateProgressBar(percentage) {
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    if (progressFill) {
+        progressFill.style.width = percentage + '%';
+    }
+    if (progressText) {
+        progressText.textContent = Math.round(percentage) + '%';
+    }
+}
+
+// 更新当前任务
+function updateCurrentTask(title, description) {
+    const currentTask = document.getElementById('currentTask');
+    const taskTitle = currentTask?.querySelector('.task-title');
+    const taskDescription = currentTask?.querySelector('.task-description');
+
+    if (taskTitle) taskTitle.textContent = title;
+    if (taskDescription) taskDescription.textContent = description;
+
+    // 添加loading动画
+    if (currentTask) {
+        currentTask.classList.add('loading');
+        // 2秒后移除loading状态，避免动画一直播放
+        setTimeout(() => {
+            currentTask.classList.remove('loading');
+        }, 2000);
+    }
 }
 
 // 渲染数学公式
@@ -384,3 +426,9 @@ function escapeLatex(text) {
 
 // DOM 加载完成后初始化
 document.addEventListener('DOMContentLoaded', initApp);
+
+// 导出进度相关函数到全局
+window.updateProgressStep = updateProgressStep;
+window.updateProcessingTitle = updateProcessingTitle;
+window.updateProgressBar = updateProgressBar;
+window.updateCurrentTask = updateCurrentTask;
