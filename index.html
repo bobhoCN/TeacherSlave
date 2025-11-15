@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学作业批改系统</title>
+
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+
+    <!-- Apple 风格字体 -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    </style>
+
+    <!-- 主样式文件 -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- 首页 -->
+    <section id="homeSection" class="section active">
+        <div class="home-container">
+            <div class="home-card glass">
+                <h1 class="app-title">数学作业批改系统</h1>
+                <p class="app-subtitle">智能识别 • 自动批改 • 快速评分</p>
+
+                <div class="action-buttons">
+                    <button id="cameraBtn" class="btn btn-primary">
+                        <span class="btn-icon">📷</span>
+                        <span>拍照批改</span>
+                    </button>
+
+                    <button id="uploadBtn" class="btn btn-secondary">
+                        <span class="btn-icon">📁</span>
+                        <span>上传图片</span>
+                    </button>
+                </div>
+
+                <div class="features">
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>支持数学公式识别</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>自动识别学生姓名</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>智能批改评分</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 拍照页 -->
+    <section id="cameraSection" class="section">
+        <div class="container">
+            <header class="page-header">
+                <button id="backFromCamera" class="btn-back">← 返回</button>
+                <h2>拍照批改</h2>
+            </header>
+
+            <div class="camera-container">
+                <div class="camera-viewport">
+                    <video id="cameraVideo" autoplay playsinline></video>
+                    <div class="camera-overlay">
+                        <div class="scan-frame"></div>
+                    </div>
+                </div>
+
+                <div class="camera-controls">
+                    <button id="captureBtn" class="btn btn-capture">
+                        <span>拍摄作业</span>
+                    </button>
+                    <p class="help-text">将作业平整放置在摄像头前</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 上传页 -->
+    <section id="uploadSection" class="section">
+        <div class="container">
+            <header class="page-header">
+                <button id="backFromUpload" class="btn-back">← 返回</button>
+                <h2>上传图片</h2>
+            </header>
+
+            <div class="upload-container">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <p>拖拽图片到此处或</p>
+                    <button id="selectFileBtn" class="btn btn-primary">选择文件</button>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <div id="previewContainer" class="preview-container" style="display: none;">
+                    <img id="previewImage" alt="预览">
+                    <button id="processImageBtn" class="btn btn-primary btn-large">
+                        开始批改
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 批改进度页 -->
+    <section id="processingSection" class="section">
+        <div class="container">
+            <div class="processing-container">
+                <div class="spinner"></div>
+                <h2>正在批改作业...</h2>
+                <div class="progress-steps">
+                    <div class="step active">
+                        <span class="step-icon">1</span>
+                        <span>识别学生姓名</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-icon">2</span>
+                        <span>提取题目内容</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-icon">3</span>
+                        <span>批改评分</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 学生姓名确认页 -->
+    <section id="confirmSection" class="section">
+        <div class="container">
+            <header class="page-header">
+                <button id="backToProcessing" class="btn-back">← 返回</button>
+                <h2>确认学生姓名</h2>
+            </header>
+
+            <div class="confirm-container">
+                <div class="card">
+                    <h3>请确认或修改学生姓名</h3>
+                    <p class="help-text">
+                        <strong>💡 提示：</strong>如果作业上没有明确的"姓名"标注，AI会尝试从作业顶部或第一行文字中智能识别。如果识别不准确，请手动输入正确的姓名。
+                    </p>
+                    <p class="help-text" style="margin-top: 10px; color: #666; font-size: 14px;">
+                        系统支持多种姓名格式：<br>
+                        • 明确标注："姓名：张三"<br>
+                        • 作业顶部：通常在第一行<br>
+                        • 常见姓名：2-4个汉字
+                    </p>
+
+                    <div class="form-group">
+                        <label for="studentNameInput">学生姓名：</label>
+                        <input type="text" id="studentNameInput" class="form-input" placeholder="请输入或确认学生姓名">
+                    </div>
+
+                    <div class="button-group">
+                        <button id="confirmNameBtn" class="btn btn-primary btn-large">
+                            确认并继续
+                        </button>
+                        <button id="regradeBtn" class="btn btn-secondary">
+                            重新识别
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 结果页 -->
+    <section id="resultSection" class="section">
+        <div class="container">
+            <header class="page-header">
+                <button id="backToHome" class="btn-back">← 新建批改</button>
+                <h2>批改结果</h2>
+            </header>
+
+            <div id="resultContainer" class="result-container">
+                <!-- 学生信息 -->
+                <div class="student-info card">
+                    <h2 id="studentName">学生姓名：</h2>
+                </div>
+
+                <!-- 题目列表 -->
+                <div id="questionsList" class="questions-list">
+                    <!-- 题目项目将通过 JS 动态插入 -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 隐藏的 Canvas 用于拍照 -->
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <!-- KaTeX JavaScript -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- 主脚本文件 -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/camera.js"></script>
+    <script src="assets/js/recognizer.js"></script>
+    <script src="assets/js/grader.js"></script>
+</body>
+</html>

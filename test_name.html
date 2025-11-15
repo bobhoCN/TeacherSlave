@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>姓名识别测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        button {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .console-log {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        .test-case {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007aff;
+        }
+        .test-case h4 {
+            margin: 0 0 10px 0;
+            color: #007aff;
+        }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>📝 姓名识别功能测试</h1>
+
+    <div class="test-section">
+        <h2>测试用例</h2>
+        <p>以下测试用例模拟了不同格式的姓名标注方式：</p>
+
+        <div class="test-case">
+            <h4>测试1: 明确标注"姓名："</h4>
+            <pre>姓名：张三</pre>
+        </div>
+
+        <div class="test-case">
+            <h4>测试2: 明确标注"学生："</h4>
+            <pre>学生：李四</pre>
+        </div>
+
+        <div class="test-case">
+            <h4>测试3: 作业顶部第一行</h4>
+            <pre>王小明
+数学作业
+第一页</pre>
+        </div>
+
+        <div class="test-case">
+            <h4>测试4: "我叫XXX"格式</h4>
+            <pre>我叫陈小明，今天交作业。</pre>
+        </div>
+
+        <div class="test-case">
+            <h4>测试5: "XXX同学"格式</h4>
+            <pre>张小明同学：
+这是我的作业。</pre>
+        </div>
+
+        <div class="test-case">
+            <h4>测试6: 英文标注</h4>
+            <pre>Name: Wang Wei</pre>
+        </div>
+
+        <div class="test-case">
+            <h4>测试7: 无明确姓名标注</h4>
+            <pre>数学作业
+1. 计算 100 + 200 = 300
+2. 计算 50 × 2 = 100</pre>
+        </div>
+
+        <button onclick="testNameExtraction()">运行所有测试</button>
+        <button onclick="clearConsole()">清空控制台</button>
+    </div>
+
+    <div class="test-section">
+        <h2>实时测试</h2>
+        <p>输入自定义文本测试姓名提取：</p>
+        <textarea id="testInput" style="width: 100%; height: 100px; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" placeholder="输入包含姓名的文本..."></textarea>
+        <br>
+        <button onclick="testSingleInput()">测试输入文本</button>
+    </div>
+
+    <div class="test-section">
+        <h2>测试结果</h2>
+        <div id="results"></div>
+    </div>
+
+    <h2>控制台输出</h2>
+    <div id="console" class="console-log"></div>
+
+    <script>
+        // 导入姓名提取函数（从 server.js 复制的逻辑）
+        function extractStudentName(content) {
+            if (!content) return '未知';
+
+            const patterns = [
+                // 模式1: "姓名：张三" 或 "学生：李四"
+                /(?:姓名|学生|name|Name)[：:\s]*([^\n\r,，。、]+)/i,
+                // 模式2: "我叫XXX" 或 "我是XXX"
+                /(?:我叫|我是|我叫做的|我叫做)[：:\s]*([^\n\r,，。、]+)/i,
+                // 模式3: 直接提取2-4个汉字（常见姓名）
+                /^\s*([\u4e00-\u9fa5]{2,4})\s*$/m,
+                // 模式4: 在文本中查找可能的姓名（前后有标点的）
+                /(?:^|[\s,，。、])[\s]*([\u4e00-\u9fa5]{2,4})[\s]*(?:$|[\s,，。、])/,
+                // 模式5: 查找"XXX同学"格式
+                /([\u4e00-\u9fa5]{2,4})同学/,
+                // 模式6: 查找顶部可能的姓名（通常在第一行前几个字符）
+                /^([\u4e00-\u9fa5]{2,4})/m
+            ];
+
+            // 尝试每种模式
+            for (const pattern of patterns) {
+                const match = content.match(pattern);
+                if (match && match[1]) {
+                    let name = match[1].trim();
+
+                    // 过滤掉明显的非姓名词汇
+                    const excludeWords = ['姓名', '学生', '名字', 'name', '班级', '学校', '年级', '姓名：', '学生：', '第', '题', '页', '日期'];
+                    if (!excludeWords.some(word => name.includes(word))) {
+                        // 确保是合理的姓名长度
+                        if (name.length >= 2 && name.length <= 4) {
+                            console.log(`模式匹配成功: ${pattern} -> ${name}`);
+                            return name;
+                        }
+                    }
+                }
+            }
+
+            // 如果所有模式都失败，尝试提取第一个连续的中文词
+            const chineseMatch = content.match(/[\u4e00-\u9fa5]{2,4}/);
+            if (chineseMatch) {
+                console.log('使用fallback提取:', chineseMatch[0]);
+                return chineseMatch[0];
+            }
+
+            return '未知';
+        }
+
+        // 重写 console.log
+        const originalLog = console.log;
+        const consoleDiv = document.getElementById('console');
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+            consoleDiv.innerHTML += message + '\n';
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        };
+
+        function clearConsole() {
+            consoleDiv.innerHTML = '';
+        }
+
+        function testNameExtraction() {
+            console.clear();
+            console.log('=== 开始姓名识别测试 ===\n');
+
+            const tests = [
+                { input: '姓名：张三', expected: '张三', desc: '明确标注"姓名："' },
+                { input: '学生：李四', expected: '李四', desc: '明确标注"学生："' },
+                { input: '王小明\n数学作业\n第一页', expected: '王小明', desc: '作业顶部第一行' },
+                { input: '我叫陈小明，今天交作业。', expected: '陈小明', desc: '"我叫XXX"格式' },
+                { input: '张小明同学：\n这是我的作业。', expected: '张小明', desc: '"XXX同学"格式' },
+                { input: 'Name: Wang Wei', expected: '未知', desc: '英文标注（预期失败）' },
+                { input: '数学作业\n1. 计算 100 + 200 = 300', expected: '未知', desc: '无明确姓名标注（预期失败）' }
+            ];
+
+            let resultsHTML = '<h3>测试结果</h3>';
+
+            tests.forEach((test, index) => {
+                console.log(`\n--- 测试 ${index + 1}: ${test.desc} ---`);
+                console.log(`输入文本: "${test.input}"`);
+
+                const result = extractStudentName(test.input);
+                const isCorrect = result === test.expected;
+
+                console.log(`提取结果: "${result}"`);
+                console.log(`期望结果: "${test.expected}"`);
+                console.log(`测试${isCorrect ? '✓ 通过' : '✗ 失败'}`);
+
+                resultsHTML += `
+                    <div class="result ${isCorrect ? 'success' : 'error'}">
+                        <strong>测试 ${index + 1}: ${test.desc}</strong><br>
+                        输入: <code>${test.input}</code><br>
+                        提取结果: <strong>${result}</strong><br>
+                        期望结果: <strong>${test.expected}</strong><br>
+                        状态: ${isCorrect ? '✓ 通过' : '✗ 失败'}
+                    </div>
+                `;
+            });
+
+            document.getElementById('results').innerHTML = resultsHTML;
+            console.log('\n=== 测试完成 ===');
+        }
+
+        function testSingleInput() {
+            const input = document.getElementById('testInput').value;
+            if (!input) {
+                alert('请输入要测试的文本');
+                return;
+            }
+
+            console.log('\n=== 实时测试 ===');
+            console.log(`输入文本: "${input}"`);
+
+            const result = extractStudentName(input);
+            console.log(`提取结果: "${result}"`);
+
+            alert(`提取的姓名: ${result}`);
+        }
+    </script>
+</body>
+</html>
