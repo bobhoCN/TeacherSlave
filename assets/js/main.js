@@ -337,8 +337,7 @@ function createQuestionElement(question, index) {
 
     const isCorrect = question.isCorrect;
     const statusClass = isCorrect ? 'correct' : 'incorrect';
-    const statusText = isCorrect ? '✓ 正确' : '✗ 错误';
-    const statusIcon = isCorrect ? '✓' : '✗';
+    const statusText = isCorrect ? '正确' : '错误';
 
     div.innerHTML = `
         <div class="question-header">
@@ -358,7 +357,6 @@ function createQuestionElement(question, index) {
         </div>
         <div class="result">
             <span class="status ${statusClass}">
-                <span>${statusIcon}</span>
                 <span>${statusText}</span>
             </span>
             <span class="score">得分：${question.score || 0}/${question.fullScore || 10}</span>
