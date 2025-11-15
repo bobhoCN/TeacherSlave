@@ -1,7 +1,7 @@
 // ===== 图像识别模块 =====
 
 // 本地代理服务器配置
-const LOCAL_API_URL = 'http://localhost:3002/api';
+const LOCAL_API_URL = 'http://localhost:3005/api';
 
 // 将 base64 转换为 blob
 function dataURLtoBlob(dataURL) {
