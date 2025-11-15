@@ -1,7 +1,7 @@
 // ===== 图像识别模块 =====
 
 // 本地代理服务器配置
-const LOCAL_API_URL = 'http://localhost:3006/api';
+const LOCAL_API_URL = 'http://localhost:3007/api';
 
 // 将 base64 转换为 blob
 function dataURLtoBlob(dataURL) {
@@ -66,6 +66,9 @@ async function recognizeQuestions(imageData) {
         const formData = new FormData();
         formData.append('image', blob, 'image.png');
 
+        // 显示开始识别
+        updateQuestionProgress(0, 0, '正在上传图片到AI识别服务...');
+
         // 发送到本地代理
         const response = await fetch(`${LOCAL_API_URL}/recognize/questions`, {
             method: 'POST',
@@ -78,12 +81,22 @@ async function recognizeQuestions(imageData) {
         }
 
         const result = await response.json();
-        console.log('题目识别结果:', result.questions);
+        const questions = result.questions || [];
 
-        return result.questions || [];
+        // 更新题目进度
+        if (questions.length > 0) {
+            updateQuestionProgress(questions.length, questions.length, '所有题目识别完成');
+        } else {
+            updateQuestionProgress(0, 0, '未识别到题目，请检查图片质量');
+        }
+
+        console.log('题目识别结果:', questions);
+
+        return questions;
 
     } catch (error) {
         console.error('题目识别错误:', error);
+        updateQuestionProgress(0, 0, '识别失败: ' + error.message);
         throw error;
     }
 }
@@ -93,16 +106,20 @@ async function recognizeHomework(imageData) {
     try {
         // 步骤1: 识别学生姓名
         updateProgressStep(0);
-        updateProgressBar(30);
+        animateProgressBar(0, 20, 500);
         updateProcessingTitle('识别学生姓名', '正在从作业中提取学生姓名信息');
         updateCurrentTask('提取姓名', '使用13种智能模式识别学生姓名');
         const studentName = await recognizeStudentName(imageData);
 
         // 步骤2: 识别题目和答案
         updateProgressStep(1);
-        updateProgressBar(70);
+        animateProgressBar(20, 85, 800);
         updateProcessingTitle('识别题目内容', '正在分析数学题目和答案');
         updateCurrentTask('提取题目', '正在识别题目内容和学生答案');
+
+        // 显示题目进度卡片
+        updateQuestionProgress(0, 0, '准备开始题目识别...');
+
         const questions = await recognizeQuestions(imageData);
 
         // 保存识别结果
@@ -113,13 +130,12 @@ async function recognizeHomework(imageData) {
 
         // 更新进度到完成
         updateProgressStep(2);
-        updateProgressBar(90);
+        animateProgressBar(85, 100, 600);
         updateProcessingTitle('批改评分', '正在计算分数并生成批改报告');
         updateCurrentTask('计算分数', '正在对比答案并计算得分');
 
         // 短暂延迟显示完成
         await new Promise(resolve => setTimeout(resolve, 500));
-        updateProgressBar(100);
 
         // 显示姓名确认页面
         showNameConfirmPage(studentName);
@@ -176,7 +192,7 @@ async function startGradingProcess() {
         }
 
         // 更新进度到准备阶段
-        updateProgressBar(5);
+        animateProgressBar(0, 5, 400);
         updateProcessingTitle('正在连接服务...', '正在检查代理服务状态');
         updateCurrentTask('连接服务', '正在验证服务器连接');
 
@@ -185,7 +201,7 @@ async function startGradingProcess() {
         try {
             const response = await fetch(`${LOCAL_API_URL}/health`);
             if (response.ok) {
-                updateProgressBar(10);
+                animateProgressBar(5, 10, 300);
                 updateProcessingTitle('开始识别...', '已连接服务器，开始图像识别');
                 updateCurrentTask('图像识别', '正在上传图片到AI识别服务');
 
@@ -197,7 +213,7 @@ async function startGradingProcess() {
         } catch (proxyError) {
             console.warn('代理服务不可用，使用模拟数据:', proxyError.message);
 
-            updateProgressBar(10);
+            animateProgressBar(5, 10, 300);
             updateProcessingTitle('服务不可用', '代理服务未启动，使用模拟数据');
             updateCurrentTask('模拟演示', '正在加载模拟数据进行演示');
 
@@ -218,7 +234,7 @@ async function startGradingProcess() {
             window.recognitionResult = recognitionResult;
 
             // 更新进度到完成
-            updateProgressBar(100);
+            animateProgressBar(10, 100, 500);
             updateProcessingTitle('识别完成', '图像识别成功，请确认学生姓名');
             updateCurrentTask('等待确认', '请确认或修改识别到的学生姓名');
 

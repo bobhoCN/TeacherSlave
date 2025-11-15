@@ -312,6 +312,61 @@ function updateCurrentTask(title, description) {
     }
 }
 
+// 显示题目进度
+function showQuestionProgress() {
+    const progressElement = document.getElementById('questionProgress');
+    if (progressElement) {
+        progressElement.style.display = 'flex';
+    }
+}
+
+// 更新题目进度
+function updateQuestionProgress(current, total, detail) {
+    const currentNumElement = document.getElementById('currentQuestionNum');
+    const totalQuestionsElement = document.getElementById('totalQuestions');
+    const detailElement = document.getElementById('questionProgressDetail');
+
+    if (currentNumElement) currentNumElement.textContent = current;
+    if (totalQuestionsElement) totalQuestionsElement.textContent = total;
+    if (detailElement) detailElement.textContent = detail || '';
+
+    showQuestionProgress();
+}
+
+// 平滑更新进度条
+function animateProgressBar(from, to, duration = 300, callback) {
+    const start = performance.now();
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+
+    function update(currentTime) {
+        const elapsed = currentTime - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = easeOutCubic(progress);
+        const currentValue = from + (to - from) * easedProgress;
+
+        if (progressFill) {
+            progressFill.style.width = currentValue + '%';
+        }
+        if (progressText) {
+            progressText.textContent = Math.round(currentValue) + '%';
+        }
+
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        } else if (callback) {
+            callback();
+        }
+    }
+
+    requestAnimationFrame(update);
+}
+
+// 缓动函数
+function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+}
+
 // 渲染数学公式
 function renderMath() {
     if (typeof katex === 'undefined') {
@@ -432,3 +487,5 @@ window.updateProgressStep = updateProgressStep;
 window.updateProcessingTitle = updateProcessingTitle;
 window.updateProgressBar = updateProgressBar;
 window.updateCurrentTask = updateCurrentTask;
+window.animateProgressBar = animateProgressBar;
+window.updateQuestionProgress = updateQuestionProgress;

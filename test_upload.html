@@ -20,7 +20,7 @@
             formData.append('image', input.files[0]);
             
             try {
-                const response = await fetch('http://localhost:3006/api/recognize/name', {
+                const response = await fetch('http://localhost:3007/api/recognize/name', {
                     method: 'POST',
                     body: formData
                 });

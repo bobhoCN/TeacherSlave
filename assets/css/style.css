@@ -694,6 +694,58 @@ body {
     color: var(--text-secondary);
 }
 
+/* ===== 题目进度样式 ===== */
+.question-progress {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: linear-gradient(135deg, rgba(0, 122, 255, 0.1), rgba(88, 86, 214, 0.1));
+    padding: 20px 28px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(0, 122, 255, 0.2);
+    max-width: 500px;
+    width: 100%;
+    margin-top: 20px;
+    animation: slideUp 0.5s ease;
+}
+
+.question-progress-icon {
+    font-size: 28px;
+    animation: bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.question-progress-content {
+    flex: 1;
+    text-align: left;
+}
+
+.question-progress-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--system-blue);
+    margin-bottom: 4px;
+}
+
+.question-progress-text span {
+    color: var(--system-indigo);
+    font-weight: 700;
+}
+
+.question-progress-detail {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
 /* 响应式调整 */
 @media (max-width: 768px) {
     .progress-steps {
@@ -706,6 +758,11 @@ body {
 
     .current-task {
         padding: 20px;
+        gap: 15px;
+    }
+
+    .question-progress {
+        padding: 16px;
         gap: 15px;
     }
 
