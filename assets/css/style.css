@@ -6,58 +6,75 @@
 }
 
 :root {
-    /* 主色调 - 活力渐变蓝到青色 */
-    --primary-color: #00D4FF;
-    --primary-hover: #00A8CC;
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #00D4FF 100%);
-    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    /* Apple风格配色 */
+    --primary-color: #007AFF;
+    --primary-hover: #0056CC;
+    --primary-light: #E3F2FD;
+    --primary-dark: #0041A8;
 
-    /* 辅助色 */
-    --accent-pink: #FF6B9D;
-    --accent-purple: #A855F7;
-    --accent-orange: #FF8C42;
-    --accent-green: #00E887;
-    --accent-blue: #00D4FF;
+    /* 辅助色 - Apple系统色 */
+    --system-blue: #007AFF;
+    --system-green: #34C759;
+    --system-indigo: #5856D6;
+    --system-orange: #FF9500;
+    --system-pink: #FF2D92;
+    --system-purple: #AF52DE;
+    --system-red: #FF3B30;
+    --system-teal: #5AC8FA;
+    --system-yellow: #FFCC00;
 
     /* 状态色 */
-    --success-color: #00E887;
-    --error-color: #FF4757;
-    --warning-color: #FFB800;
+    --success-color: #34C759;
+    --error-color: #FF3B30;
+    --warning-color: #FF9500;
 
-    /* 背景色 - 年轻活力渐变 */
-    --bg-primary: linear-gradient(135deg, #667eea 0%, #00D4FF 50%, #00F5FF 100%);
-    --bg-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --bg-card: rgba(255, 255, 255, 0.95);
-    --bg-glass: rgba(255, 255, 255, 0.15);
+    /* Apple风格背景 */
+    --bg-primary: #F2F2F7;
+    --bg-secondary: #FFFFFF;
+    --bg-tertiary: #F2F2F7;
+    --bg-card: rgba(255, 255, 255, 0.98);
+    --bg-dark: #1C1C1E;
 
     /* 文本色 */
-    --text-primary: #1a1a1a;
+    --text-primary: #000000;
     --text-secondary: #6B7280;
+    --text-tertiary: #9CA3AF;
+    --text-quaternary: #D1D5DB;
     --text-white: #FFFFFF;
-    --text-accent: #00D4FF;
+    --text-dark: #1C1C1E;
+    --text-link: #007AFF;
 
-    /* 圆角 */
-    --border-radius: 20px;
-    --border-radius-large: 28px;
-    --border-radius-small: 12px;
+    /* 分隔线 */
+    --border-color: #D1D5DB;
+    --border-light: #E5E7EB;
 
-    /* 阴影 */
-    --shadow-light: 0 4px 20px rgba(0, 212, 255, 0.1);
-    --shadow-medium: 0 8px 30px rgba(0, 212, 255, 0.15);
-    --shadow-heavy: 0 12px 50px rgba(0, 212, 255, 0.2);
-    --shadow-colorful: 0 8px 30px rgba(102, 126, 234, 0.3);
+    /* Apple风格圆角 */
+    --border-radius: 12px;
+    --border-radius-large: 18px;
+    --border-radius-xl: 24px;
+    --border-radius-small: 8px;
+    --border-radius-full: 999px;
 
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Apple风格阴影 */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+    --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+
+    /* 过渡动画 */
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif;
     background: var(--bg-primary);
     min-height: 100vh;
     color: var(--text-primary);
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* ===== 毛玻璃效果 ===== */
@@ -71,56 +88,73 @@ body {
 
 /* ===== 卡片样式 ===== */
 .card {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--bg-secondary);
     border-radius: var(--border-radius);
     padding: 24px;
-    box-shadow: var(--shadow-light);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
     transition: var(--transition);
 }
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
+    box-shadow: var(--shadow-md);
 }
 
-/* ===== 按钮样式 ===== */
+/* ===== Apple风格按钮样式 ===== */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 12px 24px;
-    border-radius: var(--border-radius-small);
+    padding: 14px 28px;
+    border-radius: var(--border-radius);
     border: none;
     font-size: 16px;
     font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     cursor: pointer;
     transition: var(--transition);
     text-decoration: none;
     gap: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    outline: none;
 }
 
 .btn-primary {
-    background: var(--primary-gradient);
+    background: var(--system-blue);
     color: var(--text-white);
-    box-shadow: var(--shadow-medium);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: var(--shadow-heavy);
-    filter: brightness(1.1);
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-xs);
+    opacity: 0.9;
 }
 
 .btn-secondary {
-    background: var(--secondary-gradient);
-    color: var(--text-white);
-    box-shadow: var(--shadow-colorful);
+    background: var(--bg-secondary);
+    color: var(--system-blue);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-xs);
 }
 
 .btn-secondary:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 40px rgba(240, 147, 251, 0.4);
-    filter: brightness(1.1);
+    background: var(--bg-tertiary);
+    border-color: var(--system-blue);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+    opacity: 0.8;
 }
 
 .btn-capture {
@@ -140,16 +174,21 @@ body {
 
 .btn-back {
     background: transparent;
-    color: var(--text-white);
+    color: var(--system-blue);
     font-size: 18px;
     padding: 8px 16px;
-    border-radius: var(--border-radius-small);
+    border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
+    min-height: 36px;
 }
 
 .btn-back:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--bg-tertiary);
+}
+
+.btn-back:active {
+    opacity: 0.6;
 }
 
 .btn-icon {
@@ -196,12 +235,11 @@ body {
 
 .home-card {
     background: var(--bg-card);
-    backdrop-filter: blur(20px);
-    border-radius: var(--border-radius-large);
+    border-radius: var(--border-radius-xl);
     padding: 60px 40px;
     text-align: center;
-    box-shadow: var(--shadow-heavy);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-light);
     animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -219,20 +257,18 @@ body {
 .home-title {
     font-size: 56px;
     font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #00D4FF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--text-primary);
     margin-bottom: 20px;
     line-height: 1.2;
+    text-align: center;
 }
 
 .home-subtitle {
     font-size: 24px;
-    color: var(--text-white);
-    opacity: 0.95;
+    color: var(--text-secondary);
     margin-bottom: 40px;
     font-weight: 500;
+    text-align: center;
 }
 
 .home-buttons {
@@ -250,13 +286,11 @@ body {
 }
 
 .app-title {
-    background: linear-gradient(135deg, #667eea 0%, #00D4FF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--text-primary);
     font-size: 48px;
     font-weight: 800;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .page-header {
@@ -268,10 +302,7 @@ body {
 .page-header h2 {
     font-size: 42px;
     font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #00D4FF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--text-primary);
     margin-bottom: 15px;
 }
 
@@ -313,8 +344,9 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-secondary);
     font-size: 16px;
+    padding: 10px 0;
 }
 
 .feature-icon {
@@ -323,9 +355,11 @@ body {
     justify-content: center;
     width: 24px;
     height: 24px;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--system-blue);
+    color: var(--text-white);
     border-radius: 50%;
     font-size: 14px;
+    flex-shrink: 0;
 }
 
 /* ===== 通用容器 ===== */
@@ -504,19 +538,17 @@ body {
 }
 
 .step.active .step-icon {
-    background: var(--success-gradient);
-    box-shadow: 0 0 20px rgba(0, 232, 135, 0.5);
+    background: var(--system-green);
+    box-shadow: var(--shadow-sm);
     animation: pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes pulse {
     0%, 100% {
         transform: scale(1);
-        box-shadow: 0 0 20px rgba(0, 232, 135, 0.5);
     }
     50% {
-        transform: scale(1.1);
-        box-shadow: 0 0 30px rgba(0, 232, 135, 0.8);
+        transform: scale(1.05);
     }
 }
 
@@ -531,10 +563,10 @@ body {
 }
 
 .student-info {
-    background: var(--success-gradient);
-    border: 2px solid rgba(0, 232, 135, 0.3);
+    background: var(--system-green);
+    border: none;
     margin-bottom: 30px;
-    box-shadow: var(--shadow-medium);
+    box-shadow: var(--shadow-md);
 }
 
 .student-info h2 {
@@ -542,7 +574,6 @@ body {
     font-size: 32px;
     font-weight: 700;
     margin: 0;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .questions-list {
@@ -552,15 +583,16 @@ body {
 }
 
 .question-item {
-    background: var(--bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
     padding: 30px;
     border-radius: var(--border-radius);
     transition: var(--transition);
+    box-shadow: var(--shadow-sm);
 }
 
 .question-item:hover {
-    background: rgba(255, 255, 255, 0.15);
+    box-shadow: var(--shadow-md);
     transform: translateY(-2px);
 }
 
@@ -570,12 +602,12 @@ body {
 
 .question-number {
     display: inline-block;
-    background: var(--primary-gradient);
+    background: var(--system-blue);
     color: var(--text-white);
     padding: 8px 20px;
-    border-radius: 25px;
+    border-radius: var(--border-radius-full);
     font-weight: 700;
-    box-shadow: var(--shadow-light);
+    box-shadow: var(--shadow-xs);
     font-size: 16px;
 }
 
@@ -583,25 +615,25 @@ body {
 .answer-content {
     margin: 16px 0;
     padding: 16px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-tertiary);
     border-radius: var(--border-radius-small);
 }
 
 .answer-content.correct {
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    background: rgba(52, 199, 89, 0.1);
+    border: 1px solid rgba(52, 199, 89, 0.3);
 }
 
 .label {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-secondary);
     margin-bottom: 12px;
     font-weight: 500;
     display: block;
 }
 
 .answer-content .label {
-    color: var(--success-color);
+    color: var(--system-green);
 }
 
 .result {
@@ -620,14 +652,14 @@ body {
     font-size: 18px;
     font-weight: 700;
     padding: 10px 20px;
-    border-radius: 25px;
+    border-radius: var(--border-radius-full);
     transition: var(--transition);
 }
 
 .status.correct {
-    background: var(--success-gradient);
+    background: var(--system-green);
     color: var(--text-white);
-    box-shadow: 0 4px 15px rgba(0, 232, 135, 0.3);
+    box-shadow: var(--shadow-sm);
     animation: bounceIn 0.5s ease;
 }
 
@@ -644,9 +676,9 @@ body {
 }
 
 .status.incorrect {
-    background: var(--warning-gradient);
+    background: var(--system-red);
     color: var(--text-white);
-    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+    box-shadow: var(--shadow-sm);
     animation: bounceIn 0.5s ease;
 }
 
@@ -657,11 +689,7 @@ body {
 .score {
     font-size: 28px;
     font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #00D4FF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: 0 2px 10px rgba(0, 212, 255, 0.3);
+    color: var(--system-blue);
 }
 
 /* ===== 数学公式样式 ===== */
