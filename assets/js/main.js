@@ -325,10 +325,31 @@ function updateQuestionProgress(current, total, detail) {
     const currentNumElement = document.getElementById('currentQuestionNum');
     const totalQuestionsElement = document.getElementById('totalQuestions');
     const detailElement = document.getElementById('questionProgressDetail');
+    const progressTextElement = document.querySelector('.question-progress-text');
 
-    if (currentNumElement) currentNumElement.textContent = current;
-    if (totalQuestionsElement) totalQuestionsElement.textContent = total;
-    if (detailElement) detailElement.textContent = detail || '';
+    // 如果 current 或 total 为 0，表示正在识别中或未识别到题目
+    if (current === 0 || total === 0) {
+        // 隐藏数量显示，但保留容器结构
+        if (progressTextElement) {
+            progressTextElement.style.visibility = 'hidden';
+        }
+    } else {
+        // 正常显示题目进度
+        if (progressTextElement) {
+            progressTextElement.style.visibility = 'visible';
+        }
+        if (currentNumElement) {
+            currentNumElement.textContent = current;
+        }
+        if (totalQuestionsElement) {
+            totalQuestionsElement.textContent = total;
+        }
+    }
+
+    // 设置详细信息
+    if (detailElement && detail) {
+        detailElement.textContent = detail;
+    }
 
     showQuestionProgress();
 }

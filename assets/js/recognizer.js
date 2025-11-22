@@ -66,7 +66,7 @@ async function recognizeQuestions(imageData) {
         const formData = new FormData();
         formData.append('image', blob, 'image.png');
 
-        // 显示开始识别
+        // 显示开始识别（不显示具体数量）
         updateQuestionProgress(0, 0, '正在上传图片到AI识别服务...');
 
         // 发送到本地代理
